@@ -1,0 +1,16 @@
+{% macro render_pizza_table(pizzas) %}
+    <table>
+        <tr>
+            <th>Назва піци</th>
+            <th>Опис</th>
+            <th>Ціна</th>
+        </tr>
+        {% for pizza in pizzas %}
+        <tr>
+            <td>{{ pizza.name }}</td>
+            <td>{{ pizza.description }}</td>
+            <td>${{ "%.2f" | format(pizza.price) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endmacro %}
