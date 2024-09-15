@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 
-{% from 'macros.html' import render_pizza_table %}
-
 {% block title %}Меню - Orderman{% endblock %}
 
 {% block content %}
     <h2>Меню</h2>
-
 
     <p>
         Сортувати за ціною:
@@ -14,7 +11,20 @@
         <a href="{{ url_for('menu', sort='desc') }}">За спаданням</a>
     </p>
 
+    <table>
+        <tr>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Ціна</th>
+        </tr>
+        {% for dish in dishes %}
+        <tr>
+            <td>{{ dish[0] }}</td>
+            <td>{{ dish[1] }}</td>
+            <td>${{ "%.2f" | format(dish[2]) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-    {{ render_pizza_table(pizzas) }}
-
+    <a href="{{ url_for('add_dish') }}">Додати нову страву</a>
 {% endblock %}
