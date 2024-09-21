@@ -26,5 +26,7 @@
         {% endfor %}
     </table>
 
+    <h3>Загальна сума всіх страв: ${{ "%.2f" | format(total_price) }}</h3>
+
     <a href="{{ url_for('add_dish') }}">Додати нову страву</a>
 {% endblock %}

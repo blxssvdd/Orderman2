@@ -25,6 +25,8 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+
 def init_db():
     with app.app_context():
         db = get_db()
@@ -53,7 +55,10 @@ def menu():
         query += ' ORDER BY price DESC'
 
     dishes = query_db(query)
-    return render_template('menu.html', dishes=dishes, sort_order=sort_order)
+
+    total_price = sum([dish[2] for dish in dishes])
+
+    return render_template('menu.html', dishes=dishes, sort_order=sort_order, total_price=total_price)
 
 
 @app.route('/admin/add', methods=['GET', 'POST'])
