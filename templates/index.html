@@ -1,9 +1,14 @@
-{% extends 'base.html' %}
-
-{% block title %}Головна - Orderman{% endblock %}
-
-{% block content %}
-    <h2>Вітаємо, {{ user_name }}!</h2>
-    <img src="https://s1.eda.ru/StaticContent/Photos/120131085053/171027192707/p_O.jpg" alt="Фото піцерії">
-    <p>Натисніть на "Меню", щоб переглянути наш асортимент.</p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Orderman</title>
+</head>
+<body>
+    <h1>Ласкаво просимо до Orderman</h1>
+    <a href="/menu">Меню</a><br>
+    <a href="/employees">Список працівників</a><br>
+    <a href="/admin/add_dish">Додати страву</a><br>
+    <a href="/admin/add_employee">Додати працівника</a>
+</body>
+</html>

@@ -1,82 +1,101 @@
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, g
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-DATABASE = 'menu.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orderman.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
+db = SQLAlchemy(app)
 
 
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
+class Dish(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f'<Dish {self.name}>'
 
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+class Position(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Position {self.title}>'
 
 
-def init_db():
-    with app.app_context():
-        db = get_db()
-        db.execute('''CREATE TABLE IF NOT EXISTS dishes
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                      name TEXT NOT NULL,
-                      description TEXT NOT NULL,
-                      price REAL NOT NULL)''')
-        db.commit()
+class Employee(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('position.id'), nullable=False)
+    position = db.relationship('Position', backref=db.backref('employees', lazy=True))
+
+    def __repr__(self):
+        return f'<Employee {self.name} - {self.position.title}>'
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route('/')
 def index():
-    user_name = "Ярослав"
-    return render_template('index.html', user_name=user_name)
+    return render_template('index.html')
 
 
 @app.route('/menu')
 def menu():
-    sort_order = request.args.get('sort', 'asc')
-    query = 'SELECT name, description, price FROM dishes'
-
-    if sort_order == 'asc':
-        query += ' ORDER BY price ASC'
-    else:
-        query += ' ORDER BY price DESC'
-
-    dishes = query_db(query)
-
-    total_price = sum([dish[2] for dish in dishes])
-
-    return render_template('menu.html', dishes=dishes, sort_order=sort_order, total_price=total_price)
+    all_dishes = Dish.query.all()
+    return render_template('menu.html', dishes=all_dishes)
 
 
-@app.route('/admin/add', methods=['GET', 'POST'])
+@app.route('/admin/add_dish', methods=['GET', 'POST'])
 def add_dish():
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        price = request.form['price']
+        price = float(request.form['price'])
 
-        db = get_db()
-        db.execute('INSERT INTO dishes (name, description, price) VALUES (?, ?, ?)',
-                   (name, description, float(price)))
-        db.commit()
+        new_dish = Dish(name=name, description=description, price=price)
+        db.session.add(new_dish)
+        db.session.commit()
 
         return redirect(url_for('menu'))
 
     return render_template('add_dish.html')
 
+
+@app.route('/employees')
+def employees():
+    all_employees = Employee.query.all()
+    return render_template('employees.html', employees=all_employees)
+
+
+@app.route('/admin/add_employee', methods=['GET', 'POST'])
+def add_employee():
+    if request.method == 'POST':
+        name = request.form['name']
+        position_title = request.form['position']
+
+
+        position = Position.query.filter_by(title=position_title).first()
+        if not position:
+            position = Position(title=position_title)
+            db.session.add(position)
+
+
+        new_employee = Employee(name=name, position=position)
+        db.session.add(new_employee)
+        db.session.commit()
+
+        return redirect(url_for('employees'))
+
+    return render_template('add_employee.html')
+
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True)

@@ -1,32 +1,25 @@
-{% extends 'base.html' %}
-
-{% block title %}Меню - Orderman{% endblock %}
-
-{% block content %}
-    <h2>Меню</h2>
-
-    <p>
-        Сортувати за ціною:
-        <a href="{{ url_for('menu', sort='asc') }}">За зростанням</a> |
-        <a href="{{ url_for('menu', sort='desc') }}">За спаданням</a>
-    </p>
-
-    <table>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Меню</title>
+</head>
+<body>
+    <h2>Меню піцерії</h2>
+    <table border="1">
         <tr>
-            <th>Назва</th>
+            <th>Назва страви</th>
             <th>Опис</th>
             <th>Ціна</th>
         </tr>
         {% for dish in dishes %}
         <tr>
-            <td>{{ dish[0] }}</td>
-            <td>{{ dish[1] }}</td>
-            <td>${{ "%.2f" | format(dish[2]) }}</td>
+            <td>{{ dish.name }}</td>
+            <td>{{ dish.description }}</td>
+            <td>{{ dish.price }} грн</td>
         </tr>
         {% endfor %}
     </table>
-
-    <h3>Загальна сума всіх страв: ${{ "%.2f" | format(total_price) }}</h3>
-
-    <a href="{{ url_for('add_dish') }}">Додати нову страву</a>
-{% endblock %}
+    <a href="/">Повернутись на головну</a>
+</body>
+</html>
