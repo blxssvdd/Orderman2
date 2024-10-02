@@ -2,13 +2,29 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Orderman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Піцерія</title>
 </head>
 <body>
-    <h1>Ласкаво просимо до Orderman</h1>
-    <a href="/menu">Меню</a><br>
-    <a href="/employees">Список працівників</a><br>
-    <a href="/admin/add_dish">Додати страву</a><br>
-    <a href="/admin/add_employee">Додати працівника</a>
+    <h1>Піцерія в {{ city_name }}</h1>
+    <h2>Погода:</h2>
+    <p>Опис: {{ weather }}</p>
+    <p>Температура: {{ temperature }}°C</p>
+    <p>Рекомендація піци: {{ recommendation }}</p>
+
+    <h2>Меню</h2>
+    <ul>
+        {% for dish in dishes %}
+            <li>{{ dish.name }} - {{ dish.description }}: {{ dish.price }} грн</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Додати нову страву</h2>
+    <form action="/add_dish" method="POST">
+        <input type="text" name="name" placeholder="Назва страви" required>
+        <input type="text" name="description" placeholder="Опис" required>
+        <input type="number" name="price" placeholder="Ціна" required>
+        <button type="submit">Додати страву</button>
+    </form>
 </body>
 </html>
