@@ -3,28 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Піцерія</title>
+    <title>Меню піцерії</title>
 </head>
 <body>
-    <h1>Піцерія в {{ city_name }}</h1>
-    <h2>Погода:</h2>
-    <p>Опис: {{ weather }}</p>
-    <p>Температура: {{ temperature }}°C</p>
-    <p>Рекомендація піци: {{ recommendation }}</p>
-
-    <h2>Меню</h2>
+    <h1>Меню піцерії</h1>
     <ul>
         {% for dish in dishes %}
-            <li>{{ dish.name }} - {{ dish.description }}: {{ dish.price }} грн</li>
+            <li><strong>{{ dish.name }}</strong>: {{ dish.description }} — {{ dish.price }} грн</li>
+        {% else %}
+            <li>Меню поки що порожнє.</li>
         {% endfor %}
     </ul>
 
-    <h2>Додати нову страву</h2>
-    <form action="/add_dish" method="POST">
-        <input type="text" name="name" placeholder="Назва страви" required>
-        <input type="text" name="description" placeholder="Опис" required>
-        <input type="number" name="price" placeholder="Ціна" required>
-        <button type="submit">Додати страву</button>
-    </form>
+    <a href="/order">Замовити страву</a>
+    <br>
+    <a href="/add_dish">Додати нову страву</a>
 </body>
 </html>

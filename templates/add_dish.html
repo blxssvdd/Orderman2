@@ -2,22 +2,24 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Додати страву</title>
 </head>
 <body>
-    <h2>Додати нову страву</h2>
-    <form method="POST">
-        <label for="name">Назва:</label><br>
+    <h1>Додати нову страву</h1>
+    <form action="/add_dish" method="POST">
+        <label for="name">Назва страви:</label><br>
         <input type="text" id="name" name="name" required><br><br>
-        
+
         <label for="description">Опис:</label><br>
         <input type="text" id="description" name="description" required><br><br>
-        
-        <label for="price">Ціна:</label><br>
+
+        <label for="price">Ціна (грн):</label><br>
         <input type="number" step="0.01" id="price" name="price" required><br><br>
-        
-        <input type="submit" value="Додати страву">
+
+        <button type="submit">Додати страву</button>
     </form>
-    <a href="/">Повернутись на головну</a>
+    <br>
+    <a href="/">Повернутися до меню</a>
 </body>
 </html>
