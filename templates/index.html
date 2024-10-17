@@ -9,14 +9,16 @@
     <h1>Меню піцерії</h1>
     <ul>
         {% for dish in dishes %}
-            <li><strong>{{ dish.name }}</strong>: {{ dish.description }} — {{ dish.price }} грн</li>
+            <li>
+                <strong>{{ dish.name }}</strong>: {{ dish.description }} — {{ dish.price }} грн
+                <a href="{{ url_for('edit_dish', id=dish.id) }}">Редагувати</a>
+                <a href="{{ url_for('delete_dish', id=dish.id) }}">Видалити</a>
+            </li>
         {% else %}
             <li>Меню поки що порожнє.</li>
         {% endfor %}
     </ul>
 
-    <a href="/order">Замовити страву</a>
-    <br>
     <a href="/add_dish">Додати нову страву</a>
 </body>
 </html>

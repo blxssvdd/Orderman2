@@ -16,13 +16,6 @@ class Dish(db.Model):
     price = db.Column(db.Float, nullable=False)
 
 
-class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    dish_id = db.Column(db.Integer, db.ForeignKey('dish.id'), nullable=False)
-    dish = db.relationship('Dish', backref=db.backref('orders', lazy=True))
-    quantity = db.Column(db.Integer, nullable=False)
-
 
 @app.route('/')
 def index():
@@ -45,20 +38,26 @@ def add_dish():
     return render_template('add_dish.html')
 
 
-@app.route('/order', methods=['GET', 'POST'])
-def order():
+@app.route('/edit_dish/<int:id>', methods=['GET', 'POST'])
+def edit_dish(id):
+    dish = Dish.query.get_or_404(id)
     if request.method == 'POST':
-        name = request.form['name']
-        dish_id = int(request.form['dish_id'])
-        quantity = int(request.form['quantity'])
+        dish.name = request.form['name']
+        dish.description = request.form['description']
+        dish.price = float(request.form['price'])
 
-        new_order = Order(name=name, dish_id=dish_id, quantity=quantity)
-        db.session.add(new_order)
         db.session.commit()
         return redirect(url_for('index'))
 
-    dishes = Dish.query.all()
-    return render_template('order.html', dishes=dishes)
+    return render_template('edit_dish.html', dish=dish)
+
+
+@app.route('/delete_dish/<int:id>')
+def delete_dish(id):
+    dish = Dish.query.get_or_404(id)
+    db.session.delete(dish)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

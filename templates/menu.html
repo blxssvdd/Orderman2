@@ -1,25 +1,19 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Меню</title>
 </head>
 <body>
-    <h2>Меню піцерії</h2>
-    <table border="1">
-        <tr>
-            <th>Назва страви</th>
-            <th>Опис</th>
-            <th>Ціна</th>
-        </tr>
+    <h1>Меню</h1>
+    <ul>
         {% for dish in dishes %}
-        <tr>
-            <td>{{ dish.name }}</td>
-            <td>{{ dish.description }}</td>
-            <td>{{ dish.price }} грн</td>
-        </tr>
+            <li>
+                {{ dish.name }} - {{ dish.description }} - {{ dish.price }} грн
+                <a href="/edit_dish/{{ dish.id }}">Редагувати</a>
+                <a href="/delete_dish/{{ dish.id }}">Видалити</a>
+            </li>
         {% endfor %}
-    </table>
-    <a href="/">Повернутись на головну</a>
+    </ul>
+    <a href="/">На головну</a>
 </body>
 </html>
